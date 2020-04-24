@@ -1,4 +1,4 @@
-# cmd_proc
+# cmdproc
 
 A microcontroller friendly command processor.  
 
