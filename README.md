@@ -4,7 +4,7 @@ A microcontroller friendly command processor.
 
 ## Motivation  
 
-A wide variety of embedded projects involve a command line interface. The idea is to create a light example of an easily manageable command lookup mechanism. This project was inspired while handling the following code:
+A wide variety of embedded projects involve a command line interface. The idea is to create a light example of an easily manageable command lookup mechanism. This project was inspired by handling code similar to:
 
 ```cpp
 if(cmd == "led")
@@ -16,7 +16,7 @@ if(cmd == "servo")
 //if(...)
 ```
 
-This conditional tree approach becomes tedious to maintain when the number of executable commands grows. cmdproc offers an abstract, easily tweakable command lookup architecture.
+This conditional tree approach becomes tedious to tweak when the number of executable commands grows. cmdproc offers an abstract, easily tweakable command lookup architecture.
 
 ## How to
 
@@ -72,4 +72,4 @@ Cmd("new_command", "adding new command is easy", HardwareDriver::unicorn)
 
 I am an aspiring developer and would be glad to hear your critique.
 
-*In case the command table is long returning help_str as the whole table appended to one string might cause an overflow.
+* In case the command table is long returning help_str as the whole table appended to one string might cause an overflow.
