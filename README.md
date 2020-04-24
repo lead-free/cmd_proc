@@ -18,7 +18,7 @@ if(cmd == "servo")
 
 This conditional tree approach becomes tedious to tweak when the number of executable commands grows. cmdproc offers an abstract, easily tweakable command lookup architecture.
 
-## How to
+## How To
 
 Let's look at the problem from abstract to specific. Consider the following code:
 
