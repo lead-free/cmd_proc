@@ -4,7 +4,7 @@ A microcontroller friendly command processor.
 
 ## Motivation  
 
-A wide variety of embedded projects involve a command line interface. The idea is to create a light example of easilly managable command lookup mechanism. This project was inspired while handling the fololwing code:
+A wide variety of embedded projects involve a command line interface. The idea is to create a light example of an easily manageable command lookup mechanism. This project was inspired while handling the following code:
 
 ```cpp
 if(cmd == "led")
@@ -16,9 +16,9 @@ if(cmd == "servo")
 //if(...)
 ```
 
-This conditional tree approach becomes tidious to maintain when the number of executable commands grows. cmdproc offers an abstract, easilly tweakable comand lookup architecture.
+This conditional tree approach becomes tedious to maintain when the number of executable commands grows. cmdproc offers an abstract, easily tweakable command lookup architecture.
 
-## Howto
+## How to
 
 Let's look at the problem from abstract to specific. Consider the following code:
 
@@ -39,14 +39,37 @@ while(true)
 }
 ```
 
-In the snippet above, received commands are handled by a seperate process (possibly interrupt) and put into a queue of terminated strings. Leave the reception details to the mysterious UsbComm. In this particular example, I was using a USB CDC driver; your commands can flow through any pheripheral interface (uart, spi, i2c, etc..).
+In the snippet above, received commands are handled by a separate process (possibly interrupt) and put into a queue of terminated strings. Leave the reception details to the mysterious `UsbComm`. In this particular example, I used a USB CDC driver; your commands can flow through any peripheral interface (uart, spi, i2c, etc..).
 
 Suppose the `UsbComm::usb_queue.get_next_cmd()` returns `"servo 180"`, which tells our microcontroller to set a servo to 180 degrees.
 
-```cpp
-const auto response = CommandParser::execute("servo 180");
+`const auto response = CommandParser::execute("servo 180");` searches the *command table* for a matching *token* (in this example *token* is `"servo"`). In case a match is found, the corresponding command handler is called. A substring of arguments that follow the token is passed to the command handler (in this example `"180"`). Finally, a meaningful status is returned ("ok", "unknown command", "invalid args", etc..).
 
-UsbComm::usb_send(&response);
+### Command Table
+
+Nothing fancy, just a table:
+|Token|Help String|Commnad Handler|
+|:---:|:---------:|:-------------:|
+|led  |set led power [0-100]%|`HardwareDriver::led`|
+|servo|set servo angle [0-180]deg|`HardwareDriver::servo`|
+
+In practice, each row of the table above is an object of class CommandParser::Cmd packed in a static array. We invoke the `HardwareDriver` that contains all abstracted command handlers to deal with the microcontroller's peripherals.
+
+```cpp
+std::array<Cmd, 2> command_table = {
+  Cmd("led", "set led power [0-100]%", HardwareDriver::led),
+  Cmd("servo", "set servo angle [0-180]deg", HardwareDriver::servo)
+}
 ```
 
-Here `CommandParser::execute("servo 180")` attempts to execute the given command and returns some meaningful status ("ok" or "unknown command" or "invalid args", etc..).
+Adding a new command becomes one line of code added to the command table
+
+```cpp
+Cmd("new_command", "adding new command is easy", HardwareDriver::unicorn)
+```
+
+## Known Issues
+
+I am an aspiring developer and would be glad to hear your critique.
+
+*In case the command table is long returning help_str as the whole table appended to one string might cause an overflow.
