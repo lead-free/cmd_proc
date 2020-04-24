@@ -43,17 +43,17 @@ In the snippet above, received commands are handled by a separate process (possi
 
 Suppose the `UsbComm::usb_queue.get_next_cmd()` returns `"servo 180"`, which tells our microcontroller to set a servo to 180 degrees.
 
-`const auto response = CommandParser::execute("servo 180");` searches the *command table* for a matching *token* (in this example *token* is `"servo"`). In case a match is found, the corresponding command handler is called. A substring of arguments that follow the token is passed to the command handler (in this example `"180"`). Finally, a meaningful status is returned ("ok", "unknown command", "invalid args", etc..).
+`const auto response = CommandParser::execute("servo 180");` [searches](CommandParser.cpp#L55) the *command table* for a matching *token* (in this example *token* is `"servo"`). In case a match is found, the corresponding command handler is [called](CommandParser.cpp#L67). A substring of arguments that follow the token is passed to the command handler (in this example `"180"`). Finally, a meaningful status is returned ("ok", "unknown command", "invalid args", etc..).
 
 ### Command Table
 
-Nothing fancy, just a table:
+Nothing fancy, just a [table](CommandParser.cpp#L15):
 |Token|Help String|Commnad Handler|
 |:---:|:---------:|:-------------:|
 |led  |set led power [0-100]%|`HardwareDriver::led`|
 |servo|set servo angle [0-180]deg|`HardwareDriver::servo`|
 
-In practice, each row of the table above is an object of class CommandParser::Cmd packed in a static array. We invoke the `HardwareDriver` that contains all abstracted command handlers to deal with the microcontroller's peripherals.
+In practice, each row of the table above is an object of class [`CommandParser::Cmd`](CommandParser.h#L21) packed in a static array. We invoke the `HardwareDriver` that contains all abstracted command handlers to deal with the microcontroller's peripherals.
 
 ```cpp
 std::array<Cmd, 2> command_table = {
@@ -62,7 +62,7 @@ std::array<Cmd, 2> command_table = {
 }
 ```
 
-Adding a new command becomes one line of code added to the command table
+Adding a new command becomes one line of code added to the command table.
 
 ```cpp
 Cmd("new_command", "adding new command is easy", HardwareDriver::unicorn)
