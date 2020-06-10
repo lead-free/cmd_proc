@@ -43,7 +43,7 @@ In the snippet above, received commands are handled by a separate process (possi
 
 Suppose the `UsbComm::usb_queue.get_next_cmd()` returns `"servo 180"`, which tells our microcontroller to set a servo to 180 degrees.
 
-`const auto response = CommandParser::execute("servo 180");` [searches](CommandParser.cpp#L55) the *command table* for a matching *token* (in this example *token* is `"servo"`). In case a match is found, the corresponding command handler is [called](CommandParser.cpp#L67). A substring of arguments that follow the token is passed to the command handler (in this example `"180"`). Finally, a meaningful status is returned ("ok", "unknown command", "invalid args", etc..).
+`const auto response = CommandParser::execute("servo 180");` [searches](CommandParser.cpp#L55) the *command table* for a matching *token* (in this example *token* is `"servo"`). In case a match is found, the corresponding command handler is [called](CommandParser.cpp#L67). Then space separeted arguments are parsed into a vector and passed to the command handler (in this example `"180"`). Finally, a meaningful status is returned ("ok", "unknown command", "invalid args", etc..).
 
 ### Command Table
 
