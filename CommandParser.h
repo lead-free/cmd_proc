@@ -1,3 +1,18 @@
+//! CommandParser declaration file.
+/**
+ * @file      CommandParser.h
+ * @author    Stanislav Sotnikov (stanislav.sotnikov145@gmail.com)
+ *
+ */
+
+#ifndef COMMANDPARSER_H
+#define COMMANDPARSER_H
+
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <functional>
+
 namespace CommandParser{
 
     //! Command container class.
@@ -48,13 +63,16 @@ namespace CommandParser{
      * @return    Status string.
      */ 
     const std::string execute(const std::string &command);
-    //! Recursive Argument PArse Method
+
+
+    //! Parse Tokens method
     /**
-     * @brief Takes space seperated arguments from args_string and puts them into args_vector.
-     * @param args_string String containing arguments to be parsed.
-     * @param args_vector Vector of parsed argument strings.
+     * @brief Tokenizes a string. Pushes the tokens onto args_vector.
+     * @param arg_string String to be tokenized.
+     * @param args_vector Output vector of tokens.
+     * @param delimiter Delimiter character (space by default).
      */
-    void parse_args_recursive(const std::string args_string, std::vector<std::string> &args_vector);
+    void parse_tokens(const std::string &args_string, std::vector<std::string> &args_vector, const char delimiter=' ');
 
     // Status strings.
     const std::string unknown_command = "unknown command\n\r";
@@ -62,7 +80,6 @@ namespace CommandParser{
     const std::string help = "CCNY Robotics Lab Welcomes You, human..\n\r";
 
     const auto max_noof_args = 3;
-
 };
 
 #endif //COMMANDPARSER_H
